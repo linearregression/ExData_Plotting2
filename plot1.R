@@ -22,9 +22,10 @@ plot1<-function(){
     # Load the NEI & SCC data frames.
     NEI <- readRDS("summarySCC_PM25.rds")
     SCC <- readRDS("Source_Classification_Code.rds")
-    # Sum Emissions by year
+    # Sum Emissions by year, tur to Million Tons
     dataset <- aggregate(Emissions~year, data=NEI, sum)
-    plot(x=dataset$year, y=dataset$Emissions, type='l', xlab = 'Year', ylab='Emissions Total')
+    dataset$Emissions <- dataset$Emissions/10e6
+    plot(x=dataset$year, y=dataset$Emissions, type='l', xlab = 'Year', ylab='Emissions Total (Million Tons)')
     
     dev.off()
 }
