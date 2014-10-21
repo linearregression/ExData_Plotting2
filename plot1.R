@@ -24,7 +24,7 @@ plot1<-function(){
     SCC <- readRDS("Source_Classification_Code.rds")
     # Sum Emissions by year
     dataset <- aggregate(Emissions~year, data=NEI, sum)
-    plot(x=dataset$year, y=dataset$Emissions, type='l', ylab = 'Year', xlab='Emissions Total')
+    plot(x=dataset$year, y=dataset$Emissions, type='l', xlab = 'Year', ylab='Emissions Total')
     
     dev.off()
 }
