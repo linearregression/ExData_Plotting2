@@ -18,13 +18,13 @@ getdata <- function() {
 
 plot1<-function(){
     library(plyr)
-    library(doBy)
     png('plot1.png', 480, 480, units="px",bg="transparent")
     # Load the NEI & SCC data frames.
     NEI <- readRDS("summarySCC_PM25.rds")
     SCC <- readRDS("Source_Classification_Code.rds")
-    dataset <- aggregate(Emissions~year,data=NEI, sum)
-    plot()
+    # Sum Emissions by year
+    dataset <- aggregate(Emissions~year, data=NEI, sum)
+    plot(x=dataset$year, y=dataset$Emissions, type='l', ylab = 'Year', xlab='Emissions Total')
     
     dev.off()
 }
