@@ -25,7 +25,7 @@ plot1<-function(){
     # Sum Emissions by year, tur to Million Tons
     dataset <- aggregate(Emissions~year, data=NEI, sum)
     dataset$Emissions <- dataset$Emissions/10e6
-    plot(x=dataset$year, y=dataset$Emissions, type='l', xlab = 'Year', ylab='Emissions Total (Million Tons)')
+    plot(x=dataset$year, y=dataset$Emissions, type='b', xlab = 'Year', ylab='Emissions Total (Million Tons)', main='Total PM25 Emissions vs Year ')
     
     dev.off()
 }
