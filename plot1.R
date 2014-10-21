@@ -17,8 +17,11 @@ getdata <- function() {
 }
 
 plot1<-function(){
-    png('plot1.png', 480, 480, bg = "white")
-    library(sqldf)
+    png('plot1.png', 480, 480, units="px",bg="transparent")
+    # Load the NEI & SCC data frames.
+    NEI <- readRDS("summarySCC_PM25.rds")
+    SCC <- readRDS("Source_Classification_Code.rds")
+    plot()
     
     dev.off()
 }
