@@ -16,15 +16,13 @@ getdata <- function() {
 
 plot1<-function(){
     require(plyr)
-    png('plot1.png', 480, 480, units="px",bg="transparent")
+    png('plot1.png', 480, 480, units="px",bg="white")
     # Load the NEI & SCC data frames.
     NEI <- readRDS("summarySCC_PM25.rds")
-    SCC <- readRDS("Source_Classification_Code.rds")
     # Sum Emissions by year, tur to Million Tons
     dataset <- aggregate(Emissions~year, data=NEI, sum)
     dataset$Emissions <- dataset$Emissions/10e6
-    plot(x=dataset$year, y=dataset$Emissions, type='b', xlab = 'Year', ylab='Emissions Total (Million Tons)', main='Total PM25 Emissions vs Year ')
-    
+    plot(x=dataset$year, y=dataset$Emissions, type='b', xlab = 'Year', ylab='Emissions Total (Million Tons)', main=bquote(PM[25] ~ 'total Emissions per Year'))
     dev.off()
 }
 
