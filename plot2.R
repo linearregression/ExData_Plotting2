@@ -15,16 +15,16 @@ getdata <- function() {
 }
 
 plot1<-function(){
-    require(plyr)
-    png('plot1.png', 480, 480, units="px",bg="transparent")
+    require(data.table)
+    png('plot2.png', 480, 480, units="px",bg="white")
     # Load the NEI & SCC data frames.
-    NEI <- readRDS("summarySCC_PM25.rds")
-    SCC <- readRDS("Source_Classification_Code.rds")
-    # Sum Emissions by year, tur to Million Tons
-    dataset <- aggregate(Emissions~year, data=NEI, sum)
-    dataset$Emissions <- dataset$Emissions/10e6
-    plot(x=dataset$year, y=dataset$Emissions, type='b', xlab = 'Year', ylab='Emissions Total (Million Tons)', main='Total PM25 Emissions vs Year ')
+    NEI <- as.data.table(readRDS("summarySCC_PM25.rds"), keep.rownames=F)
+    SCC <- as.data.table(readRDS("Source_Classification_Code.rds"), keep.rownames=F)
+    # Sum of Emissions in Baltimore, Maryland(fips==24510) 
+    # by year to Million Tons
+    dataset <- NEI[, .SD[, fips==24510, Emissions], by=year]
     
+    plot(x=dataset$year, y=dataset$Emissions, type='b', xlab = 'Year', ylab='Emissions Total (Million Tons)', main='Baltimore: Total PM25 Emissions vs Year ')   
     dev.off()
 }
 
