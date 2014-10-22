@@ -28,7 +28,7 @@ plot1<-function(){
     # from EI.Sector is enough
     coalcombustionEI <- unique(grep("vehicle", pollutionSrc$EI.Sector, perl=T, ignore.case=T, value=T)) 
     SCC_Code <- pollutionSrc[pollutionSrc$EI.Sector %in% coalcombustionEI, ]$SCC
-    dataset <- subset(dataset, subset=(dataset$SCC %in% SCC_Code), select=c(Emissions, year))[dataset$fips=='20415',]
+    dataset <- subset(dataset, subset=(dataset$SCC %in% SCC_Code), select=c(Emissions, fips, year))[dataset$fips=='20415',]
 
     dataset <- aggregate(Emissions~year, data=dataset, sum, na.rm=TRUE)
 
