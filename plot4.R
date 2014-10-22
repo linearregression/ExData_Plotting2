@@ -28,7 +28,7 @@ plot1<-function(){
     # and 'comb' (combustion/combust etc) from EI.Sector is enough
     coalcombustionEI <- unique(grep("comb(.)+coal", pollutionSrc$EI.Sector, perl=T, ignore.case=T, value=T)) 
     SCC_Code <- pollutionSrc[pollutionSrc$EI.Sector %in% coalcombustionEI, ]$SCC
-    dataset <- subset(dataset, subset=(dataset$SCC %in% SCC_CODE), select=c(Emissions, type, year))
+    dataset <- subset(dataset, subset=(dataset$SCC %in% SCC_Code), select=c(Emissions, type, year))
     dataset <- aggregate(Emissions ~type + year, data=dataset, sum, na.rm=TRUE)
 
 
