@@ -16,16 +16,24 @@ getdata <- function() {
 
 plot1<-function(){
     require(data.table)
+    require(dplyr)
     require(ggplot2)
     png('plot3.png', 960, 960, bg="white")
     # Load the NEI & SCC data frames.
-    NEI <- as.data.table(readRDS("summarySCC_PM25.rds"), keep.rownames=F)
+    dataset <- as.data.table(readRDS("summarySCC_PM25.rds"), keep.rownames=F)
    
     # Sum of Emissions in Baltimore, Maryland(fips==24510) 
     # by year to Million Tons
-    dataset <- subset(NEI, subset=(fips=='24510'), select=c(Emissions, year))
-    dataset <- aggregate(Emissions~year, data=dataset, sum) 
-    plot(x=dataset$year, y=dataset$Emissions/10e6, type='b', xlab = 'Year', ylab='Emissions Total (Million Tons)', main=bquote(PM[25] ~ 'total Emissions in Baltimore per source per Year'))   
+    dataset <- subset(dataset, subset=(fips=='24510'), select=c(Emissions, type, year))
+    dataset <- aggregate(Emissions ~type + year, daa=dataset, sum, na.rm=TRUE)
+    g <- ggplot(data = dataset, mapping = aes(x=year, y = Emissions, fill=type)) +
+        layer(geom = 'histogram', geom_params = list(fill='green',color = 'steelblue'), stat = 'identity')
+        facet_grid(.~type, scales = "free", space="free") + 
+        labs(x="Year",
+             y= expression("Total PM"[2.5]*" Emission (Tons)"),
+             title=expression("PM"[2.5]*" Emissions, Baltimore City 1999-2008 by Source Type")) 
+
+    print(g)
     dev.off()
 }
 
