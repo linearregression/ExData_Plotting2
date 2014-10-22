@@ -22,7 +22,8 @@ plot1<-function(){
     
     # Sum of Emissions in Baltimore, Maryland(fips==24510) 
     # by year to Million Tons
-    dataset <- NEI[, .SD[, fips==24510, Emissions], by=year]
+    dataset <- subset(NEI, subset=(fips=='24510'), select=c(Emissions, year))
+
     dataset <- aggregate(Emissions~year, data=dataset, sum) 
     plot(x=dataset$year, y=dataset$Emissions/10e6, type='b', xlab = 'Year', ylab='Emissions Total (Million Tons)', main=bquote(PM[25] ~ 'total Emissions in Baltimore per Year'))   
     dev.off()
