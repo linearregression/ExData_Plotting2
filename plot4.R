@@ -36,7 +36,7 @@ plot1<-function(){
         labs(x="Year",
              y= expression("Total PM"[2.5]*" Emission (Tons)"),
              title=expression("PM"[2.5]*" From US Coal Combustion 1999-2008")) +
-        geom_bar(stat='identity', fill='yellow')
+        geom_bar(stat='identity', fill='cyan')
 
     print(g)
     dev.off()
