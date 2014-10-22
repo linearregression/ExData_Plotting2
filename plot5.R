@@ -18,24 +18,25 @@ plot1<-function(){
     #require(data.table)
     require(dplyr)
     require(ggplot2)
-    png('plot4.png', 480, 480, bg="white")
+    png('plot5.png', 480, 480, bg="white")
     # Load the NEI & SCC data frames.
     dataset <- readRDS("summarySCC_PM25.rds")
     pollutionSrc <- readRDS("Source_Classification_Code.rds") 
 
-    # Goal: Find all the emissions having SCC code related to Coal Combustion
-    # With no domain knowledge, assume that cases-sensitive search for 'coal' 
-    # and 'comb' (combustion/combust etc) from EI.Sector is enough
-    coalcombustionEI <- unique(grep("comb(.)+coal", pollutionSrc$EI.Sector, perl=T, ignore.case=T, value=T)) 
+    # Goal: Find all the emissions having SCC code related to vehicle
+    # With no domain knowledge, assume that cases-sensitive search for 'vehicle' 
+    # from EI.Sector is enough
+    coalcombustionEI <- unique(grep("vehicle", pollutionSrc$EI.Sector, perl=T, ignore.case=T, value=T)) 
     SCC_Code <- pollutionSrc[pollutionSrc$EI.Sector %in% coalcombustionEI, ]$SCC
-    dataset <- subset(dataset, subset=(dataset$SCC %in% SCC_Code), select=c(Emissions, year))
+    dataset <- subset(dataset, subset=(dataset$SCC %in% SCC_Code), select=c(Emissions, year))[dataset$fips=='20415',]
+
     dataset <- aggregate(Emissions~year, data=dataset, sum, na.rm=TRUE)
 
 
     g <- ggplot(data = dataset, mapping = aes(x=factor(year), y = Emissions)) +
         labs(x="Year",
              y= expression("Total PM"[2.5]*" Emission (Tons)"),
-             title=expression("PM"[2.5]*" From US Coal Combustion 1999-2008")) +
+             title=expression("PM"[2.5]*" From Vehicle in Baltimore 1999-2008")) +
         geom_bar(stat='identity', fill='cyan')
 
     print(g)
