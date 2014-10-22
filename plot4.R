@@ -28,15 +28,15 @@ plot1<-function(){
     # and 'comb' (combustion/combust etc) from EI.Sector is enough
     coalcombustionEI <- unique(grep("comb(.)+coal", pollutionSrc$EI.Sector, perl=T, ignore.case=T, value=T)) 
     SCC_Code <- pollutionSrc[pollutionSrc$EI.Sector %in% coalcombustionEI, ]$SCC
-    dataset <- subset(dataset, subset=(dataset$SCC %in% SCC_Code), select=c(Emissions, type, year))
-    dataset <- aggregate(Emissions ~type + year, data=dataset, sum, na.rm=TRUE)
+    dataset <- subset(dataset, subset=(dataset$SCC %in% SCC_Code), select=c(Emissions, year))
+    dataset <- aggregate(Emissions~year, data=dataset, sum, na.rm=TRUE)
 
 
-    g <- ggplot(data = dataset, mapping = aes(x=factor(year), y = Emissions, fill=type)) +
+    g <- ggplot(data = dataset, mapping = aes(x=factor(year), y = Emissions)) +
         labs(x="Year",
              y= expression("Total PM"[2.5]*" Emission (Tons)"),
              title=expression("PM"[2.5]*" From US Coal Combustion 1999-2008")) +
-        geom_boxplot(outlier.colour = "green", outlier.size = 3)
+        geom_bar(stat='identity', fill='yellow')
 
     print(g)
     dev.off()
