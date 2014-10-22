@@ -22,16 +22,22 @@ plot1<-function(){
     # Load the NEI & SCC data frames.
     dataset <- readRDS("summarySCC_PM25.rds")
     pollutionSrc <- readRDS("Source_Classification_Code.rds") 
-    # Sum of Emissions in Baltimore, Maryland(fips==24510) 
-    # by year to Million Tons
+
+    # Goal: Find all the emissions having SCC code related to Coal Combustion
+    # With no domain knowledge, assume that cases-sensitive search for 'coal' 
+    # and 'comb' (combustion/combust etc) from EI.Sector is enough
+    coalcombustionEI <- unique(grep("comb(.)+coal", pollutionSrc$EI.Sector, perl=T, ignore.case=T, value=T)) 
+    SCC_Code<- pollutionSrc[pollutionSrc$EI.Sector %in% a, ]$SCC
+    inner_join(
     dataset <- subset(dataset, subset=(fips=='24510'), select=c(Emissions, type, year))
     dataset <- aggregate(Emissions ~type + year, data=dataset, sum, na.rm=TRUE)
+
+
     g <- ggplot(data = dataset, mapping = aes(x=factor(year), y = Emissions, fill=type)) +
-        layer(geom = 'histogram', geom_params = list(color = 'steelblue'), stat = 'identity') +
-        facet_grid(. ~type, scales = "free", space="free") + 
         labs(x="Year",
              y= expression("Total PM"[2.5]*" Emission (Tons)"),
-             title=expression("PM"[2.5]*" Emissions, Baltimore City 1999-2008 by Source Type")) 
+             title=expression("PM"[2.5]*" From US Coal Combustion 1999-2008")) +
+        geom_boxplot(outlier.colour = "green", outlier.size = 3)
 
     print(g)
     dev.off()
