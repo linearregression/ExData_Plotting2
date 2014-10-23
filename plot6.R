@@ -19,7 +19,7 @@ plot1<-function(){
     require(dplyr)
     require(ggplot2)
     png('plot6.png', 480, 960, bg="white")
-    par(mfrow=c(1,2))
+    
     # Load the NEI & SCC data frames.
     dataset <- readRDS("summarySCC_PM25.rds")
     pollutionSrc <- readRDS("Source_Classification_Code.rds") 
