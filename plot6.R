@@ -18,7 +18,8 @@ plot1<-function(){
     #require(data.table)
     require(dplyr)
     require(ggplot2)
-    png('plot6.png', 480, 480, bg="white")
+    png('plot6.png', 480, 960, bg="white")
+    par(mfrow=c(1,2))
     # Load the NEI & SCC data frames.
     dataset <- readRDS("summarySCC_PM25.rds")
     pollutionSrc <- readRDS("Source_Classification_Code.rds") 
@@ -31,17 +32,15 @@ plot1<-function(){
     SCC_Code <- pollutionSrc[pollutionSrc$EI.Sector %in% coalcombustionEI, ]$SCC
     dataset <- subset(dataset, subset=(dataset$SCC %in% SCC_Code), select=c(Emissions, fips, year))
 
-
-
     dataset <- aggregate(Emissions~year, data=dataset, sum, na.rm=TRUE)
 
 
-    g <- ggplot(data = dataset, mapping = aes(x=factor(year), y = Emissions)) +
+    g <- ggplot(data = dataset, mapping = aes(x=factor(year), y = Emissions, fill=fips)) +
         labs(x="Year",
              y= expression("Total PM"[2.5]*" Emission (Tons)"),
-             title=expression("PM"[2.5]*" From Vehicle in Baltimore 1999-2008")) +
-        geom_bar(stat='identity', fill='cyan')
-
+             title=expression("PM"[2.5]*" From Vehicle Emissions in Baltimore vs Los Angeles 1999-2008")) +
+        facet_grid(. ~fips, scales = "free", space="free") +
+        layer(geom = 'histogram', geom_params = list(color = 'steelblue'), stat = 'identity') 
     print(g)
     dev.off()
 }
