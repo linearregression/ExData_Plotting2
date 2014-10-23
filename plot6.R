@@ -33,13 +33,15 @@ plot1<-function(){
     dataset <- subset(dataset, subset=(dataset$SCC %in% SCC_Code), select=c(Emissions, fips, year))
 
     dataset <- aggregate(Emissions~fips+year, data=dataset, sum, na.rm=TRUE)
+    cityname <-function(x) { ifelse(x=='06037', 'Los Angeles', 'Baltimore')}
 
+    dataset <- mutate(dataset, city=cityname(fips))	
 
-    g <- ggplot(data = dataset, mapping = aes(x=factor(year), y = Emissions, fill=fips)) +
+    g <- ggplot(data = dataset, mapping = aes(x=factor(year), y = Emissions, fill=city)) +
         labs(x="Year",
              y= expression("Total PM"[2.5]*" Emission (Tons)"),
              title=expression("PM"[2.5]*" From Vehicle Emissions in Baltimore vs Los Angeles 1999-2008")) +
-        facet_grid(. ~fips, scales = "free", space="free") +
+        facet_grid(. ~city, scales = "free", space="free") +
         layer(geom = 'histogram', geom_params = list(color = 'steelblue'), stat = 'identity') 
     print(g)
     dev.off()
