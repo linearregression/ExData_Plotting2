@@ -27,12 +27,12 @@ plot1<-function(){
     # Goal: Find all the emissions having SCC code related to vehicle
     # With no domain knowledge, assume that cases-sensitive search for 'vehicle' 
     # from EI.Sector is enough. Dataset for Baltimroe with fips equals 24510 
-    bal_dataset <- dataset[dataset$fips %in% c('24510','06037'),]
+    dataset <- dataset[dataset$fips %in% c('24510','06037'),]
     coalcombustionEI <- unique(grep("vehicle", pollutionSrc$EI.Sector, perl=T, ignore.case=T, value=T)) 
     SCC_Code <- pollutionSrc[pollutionSrc$EI.Sector %in% coalcombustionEI, ]$SCC
     dataset <- subset(dataset, subset=(dataset$SCC %in% SCC_Code), select=c(Emissions, fips, year))
 
-    dataset <- aggregate(Emissions~year, data=dataset, sum, na.rm=TRUE)
+    dataset <- aggregate(Emissions~fips+year, data=dataset, sum, na.rm=TRUE)
 
 
     g <- ggplot(data = dataset, mapping = aes(x=factor(year), y = Emissions, fill=fips)) +
